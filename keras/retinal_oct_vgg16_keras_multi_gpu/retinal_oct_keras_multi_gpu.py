@@ -146,6 +146,7 @@ def define_keras_model():
     config = tf.estimator.RunConfig(train_distribute=strategy)
     estimator = tf.keras.estimator.model_to_estimator(model, config=config)
 
+    return estimator
 
 
 
