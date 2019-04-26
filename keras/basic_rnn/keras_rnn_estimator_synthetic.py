@@ -156,7 +156,7 @@ def main(argv):
 
     training_dataset_size = 7000
     BATCH_SIZE = 100
-    EPOCHS = 7
+    EPOCHS = 2
     max_steps_per_epoch = training_dataset_size / BATCH_SIZE
     total_steps = max_steps_per_epoch * EPOCHS
 
@@ -189,8 +189,12 @@ def main(argv):
 
     rnn_model = define_rnn()
 
+#    Based on -- https://medium.com/tensorflow/multi-gpu-training-with-estimators-tf-keras-and-tf-data-ba584c3134db
 #    NUM_GPUS = 2
 #    strategy = tf.contrib.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
+#    config = tf.estimator.RunConfig(train_distribute=strategy)
+#    estimator = tf.keras.estimator.model_to_estimator(model,
+#                                                  config=config)
     config = tf.estimator.RunConfig()
 
     print( config )
@@ -234,6 +238,16 @@ def main(argv):
 
     tf.estimator.train_and_evaluate( estimator, train_spec, eval_spec )
 
+    total_time = sum(time_hist.times)
+    
+    #print(f"total time with {NUM_GPUS} GPU(s): {total_time} seconds") 
+    print(f"total time with: {total_time} seconds") 
+    
+    avg_time_per_batch = np.mean(time_hist.times)
+    
+    #print(f"{BATCH_SIZE*NUM_GPUS/avg_time_per_batch} images/second with {NUM_GPUS} GPU(s)" )
+    print(f"{BATCH_SIZE/avg_time_per_batch} recs/second" )
+
     #y_pred = rnn_model.predict(X_valid)
     #plot_series(X_valid[0, :, 0], y_valid[0, 0], y_pred[0, 0])
     #plt.show()
@@ -242,9 +256,9 @@ def main(argv):
 #                    hooks=[time_hist])
     
 
-    predictions = estimator.predict( input_fn=eval_input_fn )
+    #predictions = estimator.predict( input_fn=eval_input_fn )
 
-    template = ('\nPrediction is "{}" ({:.1f}%), expected "{}"')
+    #template = ('\nPrediction is "{}" ({:.1f}%), expected "{}"')
 
 
     """
