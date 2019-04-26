@@ -61,9 +61,10 @@ test_folder = os.path.join('/home/josh/retinal_oct/OCT2017_final', 'test', '**',
 
 labels = ['CNV', 'DME', 'DRUSEN', 'NORMAL']
 
-NUM_GPUS = 1
-BATCH_SIZE = 128
+NUM_GPUS = 2
+BATCH_SIZE = 64
 EPOCHS = 1
+training_image_count = 83484
 
 
 def input_fn(file_pattern, labels,
@@ -252,7 +253,9 @@ def main(argv):
     avg_time_per_batch = np.mean(time_hist.times)
 
     #print(f"{BATCH_SIZE*NUM_GPUS/avg_time_per_batch} images/second with {NUM_GPUS} GPU(s)" )
-    print("%d recs/second" % (BATCH_SIZE * NUM_GPUS/avg_time_per_batch) )  
+    print("%d recs/second" % (BATCH_SIZE * NUM_GPUS/avg_time_per_batch) )
+
+    print("total images trained per epoch: %d" % training_image_count)  
 
     
     estimator.evaluate(input_fn=lambda:input_fn(test_folder,
