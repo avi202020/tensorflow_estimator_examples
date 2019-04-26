@@ -233,6 +233,6 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    #tf.logging.set_verbosity(tf.logging.INFO)
+    tf.logging.set_verbosity(tf.logging.INFO)
     #opts = get_args()
     tf.app.run(main)
