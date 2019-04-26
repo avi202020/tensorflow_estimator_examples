@@ -1,0 +1,4 @@
+FROM tensorflow/tensorflow:1.12.0-gpu-py3
+RUN pip3 install gputil
+ADD tf_estimator_multi_gpu_iris.py /
+ENTRYPOINT ["python3", "/tf_estimator_multi_gpu_iris.py"]
