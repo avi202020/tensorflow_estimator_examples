@@ -46,6 +46,16 @@ tf.random.set_random_seed(42)
 # https://stackoverflow.com/questions/53014306/error-15-initializing-libiomp5-dylib-but-found-libiomp5-dylib-already-initial
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
+"""
+# this forces CPU-only
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
+if tf.test.gpu_device_name():
+    print('GPU found')
+else:
+    print("No GPU found")
+"""
+
 train_folder = os.path.join('/home/josh/retinal_oct/OCT2017_final', 'train', '**', '*.jpeg')
 test_folder = os.path.join('/home/josh/retinal_oct/OCT2017_final', 'test', '**', '*.jpeg')
 
@@ -121,7 +131,7 @@ def input_fn(sequence_data, labels, epochs, batch_size):
     return ds    
 """
 
-def define_keras_model():
+def define_keras_model_multi_gpu():
 
     keras_vgg16 = tf.keras.applications.VGG16(input_shape=(224,224,3),
                                           include_top=False)
@@ -148,7 +158,30 @@ def define_keras_model():
 
     return estimator
 
+def define_keras_model():
 
+    keras_vgg16 = tf.keras.applications.VGG16(input_shape=(224,224,3),
+                                          include_top=False)
+
+    output = keras_vgg16.output
+    output = tf.keras.layers.Flatten()(output)
+    predictions = tf.keras.layers.Dense(len(labels), activation=tf.nn.softmax)(output)
+
+    model = tf.keras.Model(inputs=keras_vgg16.input, outputs=predictions)
+
+    for layer in keras_vgg16.layers[:-4]:
+        layer.trainable = False
+
+    optimizer = tf.train.AdamOptimizer()
+
+    model.compile(loss='categorical_crossentropy', 
+              optimizer=optimizer,
+              metrics=['accuracy'])
+
+	
+    estimator = tf.keras.estimator.model_to_estimator(model)
+
+    return estimator
 
 
 
@@ -187,8 +220,8 @@ def main(argv):
 
     # steps_per_epoch = math.ceil(len(x) / batch_size)
 
-    #print( "training_dataset_size: ", training_dataset_size)
-    #print( "EPOCHS: ", EPOCHS)
+    print( "BATCH_SIZE: ", BATCH_SIZE )
+    print( "EPOCHS: ", EPOCHS )
     #print( "max_steps_total: ", max_steps_per_epoch)
     #print( "total_steps: ", total_steps )
 
