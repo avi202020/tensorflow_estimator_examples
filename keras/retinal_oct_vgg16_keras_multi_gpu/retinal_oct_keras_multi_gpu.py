@@ -46,8 +46,8 @@ tf.random.set_random_seed(42)
 # https://stackoverflow.com/questions/53014306/error-15-initializing-libiomp5-dylib-but-found-libiomp5-dylib-already-initial
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
-train_folder = os.path.join('OCT2017', 'train', '**', '*.jpeg')
-test_folder = os.path.join('OCT2017', 'test', '**', '*.jpeg')
+train_folder = os.path.join('/home/josh/retinal_oct/OCT2017_final', 'train', '**', '*.jpeg')
+test_folder = os.path.join('/home/josh/retinal_oct/OCT2017_final', 'test', '**', '*.jpeg')
 
 labels = ['CNV', 'DME', 'DRUSEN', 'NORMAL']
 
@@ -123,28 +123,28 @@ def input_fn(sequence_data, labels, epochs, batch_size):
 
 def define_keras_model():
 
-	keras_vgg16 = tf.keras.applications.VGG16(input_shape=(224,224,3),
+    keras_vgg16 = tf.keras.applications.VGG16(input_shape=(224,224,3),
                                           include_top=False)
 
-	output = keras_vgg16.output
-	output = tf.keras.layers.Flatten()(output)
-	predictions = tf.keras.layers.Dense(len(labels), activation=tf.nn.softmax)(output)
+    output = keras_vgg16.output
+    output = tf.keras.layers.Flatten()(output)
+    predictions = tf.keras.layers.Dense(len(labels), activation=tf.nn.softmax)(output)
 
-	model = tf.keras.Model(inputs=keras_vgg16.input, outputs=predictions)
+    model = tf.keras.Model(inputs=keras_vgg16.input, outputs=predictions)
 
-	for layer in keras_vgg16.layers[:-4]:
-	    layer.trainable = False
+    for layer in keras_vgg16.layers[:-4]:
+        layer.trainable = False
 
-	optimizer = tf.train.AdamOptimizer()
+    optimizer = tf.train.AdamOptimizer()
 
-	model.compile(loss='categorical_crossentropy', 
+    model.compile(loss='categorical_crossentropy', 
               optimizer=optimizer,
               metrics=['accuracy'])
 
 	
-	strategy = tf.contrib.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
-	config = tf.estimator.RunConfig(train_distribute=strategy)
-	estimator = tf.keras.estimator.model_to_estimator(model, config=config)
+    strategy = tf.contrib.distribute.MirroredStrategy(num_gpus=NUM_GPUS)
+    config = tf.estimator.RunConfig(train_distribute=strategy)
+    estimator = tf.keras.estimator.model_to_estimator(model, config=config)
 
 
 
@@ -192,35 +192,33 @@ def main(argv):
     #print( "total_steps: ", total_steps )
 
 
-	time_hist = TimeHistory()
+    time_hist = TimeHistory()
 
-	estimator = define_keras_model()
+    estimator = define_keras_model()
 
-	print( train_folder )
 
-	"""
+    print( train_folder )
 
-	estimator.train(input_fn=lambda:input_fn(train_folder,
-	                                         labels,
-	                                         shuffle=True,
-	                                         batch_size=BATCH_SIZE,
-	                                         buffer_size=2048,
-	                                         num_epochs=EPOCHS,
-	                                         prefetch_buffer_size=4),
-	                hooks=[time_hist])
+
+    estimator.train(input_fn=lambda:input_fn(train_folder,
+                                         labels,
+                                         shuffle=True,
+                                         batch_size=BATCH_SIZE,
+                                         buffer_size=2048,
+                                         num_epochs=EPOCHS,
+                                         prefetch_buffer_size=4),
+                hooks=[time_hist])
 
 
     total_time = sum(time_hist.times)
-    
+
     #print(f"total time with {NUM_GPUS} GPU(s): {total_time} seconds") 
     print("total time with %d GPUs: %d seconds" % (NUM_GPUS, total_time) )
-    
-    avg_time_per_batch = np.mean(time_hist.times)
-    
-    #print(f"{BATCH_SIZE*NUM_GPUS/avg_time_per_batch} images/second with {NUM_GPUS} GPU(s)" )
-    print("%d recs/second" % (BATCH_SIZE * NUM_GPUS/avg_time_per_batch) )
 
-    """
+    avg_time_per_batch = np.mean(time_hist.times)
+
+    #print(f"{BATCH_SIZE*NUM_GPUS/avg_time_per_batch} images/second with {NUM_GPUS} GPU(s)" )
+    print("%d recs/second" % (BATCH_SIZE * NUM_GPUS/avg_time_per_batch) )  
 
     """
     estimator.evaluate(input_fn=lambda:input_fn(test_folder,
@@ -229,7 +227,8 @@ def main(argv):
                                             batch_size=BATCH_SIZE,
                                             buffer_size=2048,
                                             num_epochs=1))
-	"""
+	"""    
+
 
 
 if __name__ == '__main__':
