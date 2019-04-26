@@ -52,8 +52,8 @@ test_folder = os.path.join('/home/josh/retinal_oct/OCT2017_final', 'test', '**',
 labels = ['CNV', 'DME', 'DRUSEN', 'NORMAL']
 
 NUM_GPUS = 2
-BATCH_SIZE = 32
-EPOCHS = 2
+BATCH_SIZE = 128
+EPOCHS = 1
 
 
 def input_fn(file_pattern, labels,
@@ -221,14 +221,14 @@ def main(argv):
     #print(f"{BATCH_SIZE*NUM_GPUS/avg_time_per_batch} images/second with {NUM_GPUS} GPU(s)" )
     print("%d recs/second" % (BATCH_SIZE * NUM_GPUS/avg_time_per_batch) )  
 
-    """
+    
     estimator.evaluate(input_fn=lambda:input_fn(test_folder,
                                             labels, 
                                             shuffle=True,
                                             batch_size=BATCH_SIZE,
                                             buffer_size=2048,
                                             num_epochs=1))
-	"""    
+	    
 
 
 
