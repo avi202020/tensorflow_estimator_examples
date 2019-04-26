@@ -114,7 +114,9 @@ def define_rnn():
         keras.layers.SimpleRNN(1)
     ])
 
-    model.compile(loss="mse", optimizer="adam")
+    #model.compile(loss="mse", optimizer="adam")
+    optimizer = tf.train.AdamOptimizer()
+    model.compile(loss="mse", optimizer=optimizer)
     return model
 
 def input_fn(sequence_data, labels, epochs, batch_size):
