@@ -194,6 +194,12 @@ def main(argv):
 
 	time_hist = TimeHistory()
 
+	estimator = define_keras_model()
+
+	print( train_folder )
+
+	"""
+
 	estimator.train(input_fn=lambda:input_fn(train_folder,
 	                                         labels,
 	                                         shuffle=True,
@@ -213,6 +219,8 @@ def main(argv):
     
     #print(f"{BATCH_SIZE*NUM_GPUS/avg_time_per_batch} images/second with {NUM_GPUS} GPU(s)" )
     print("%d recs/second" % (BATCH_SIZE * NUM_GPUS/avg_time_per_batch) )
+
+    """
 
     """
     estimator.evaluate(input_fn=lambda:input_fn(test_folder,
