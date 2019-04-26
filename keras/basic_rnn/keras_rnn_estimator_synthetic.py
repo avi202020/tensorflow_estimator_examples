@@ -241,12 +241,12 @@ def main(argv):
     total_time = sum(time_hist.times)
     
     #print(f"total time with {NUM_GPUS} GPU(s): {total_time} seconds") 
-    print(f"total time with: {total_time} seconds") 
+    print("total time with: %d seconds" % total_time) 
     
     avg_time_per_batch = np.mean(time_hist.times)
     
     #print(f"{BATCH_SIZE*NUM_GPUS/avg_time_per_batch} images/second with {NUM_GPUS} GPU(s)" )
-    print(f"{BATCH_SIZE/avg_time_per_batch} recs/second" )
+    print("%d recs/second" % (BATCH_SIZE*NUM_GPUS/avg_time_per_batch) )
 
     #y_pred = rnn_model.predict(X_valid)
     #plot_series(X_valid[0, :, 0], y_valid[0, 0], y_pred[0, 0])
