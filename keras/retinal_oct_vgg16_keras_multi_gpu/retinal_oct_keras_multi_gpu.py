@@ -62,7 +62,7 @@ test_folder = os.path.join('/home/josh/retinal_oct/OCT2017_final', 'test', '**',
 labels = ['CNV', 'DME', 'DRUSEN', 'NORMAL']
 
 NUM_GPUS = 2
-BATCH_SIZE = 64
+BATCH_SIZE = 256
 EPOCHS = 1
 training_image_count = 83484
 
