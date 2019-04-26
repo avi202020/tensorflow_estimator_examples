@@ -229,7 +229,8 @@ def main(argv):
 
     time_hist = TimeHistory()
 
-    estimator = define_keras_model()
+    #estimator = define_keras_model()
+    estimator = define_keras_model_multi_gpu()
 
 
     print( train_folder )
