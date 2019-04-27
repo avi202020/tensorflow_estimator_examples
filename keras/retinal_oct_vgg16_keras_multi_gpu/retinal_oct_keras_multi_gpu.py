@@ -65,6 +65,7 @@ NUM_GPUS = 2
 BATCH_SIZE = 64
 EPOCHS = 1
 training_image_count = 83484
+BUFFER_SIZE = 2048
 
 
 def input_fn(file_pattern, labels,
@@ -72,7 +73,7 @@ def input_fn(file_pattern, labels,
              shuffle=False,
              batch_size=64, 
              num_epochs=None, 
-             buffer_size=4096,
+             buffer_size=BUFFER_SIZE,
              prefetch_buffer_size=None):
 
     table = tf.contrib.lookup.index_table_from_tensor(mapping=tf.constant(labels))
@@ -241,10 +242,10 @@ def main(argv):
                                          shuffle=True,
                                          batch_size=BATCH_SIZE,
                                          #buffer_size=2048,
-                                         buffer_size=4096,
+                                         buffer_size=BUFFER_SIZE,
                                          num_epochs=EPOCHS,
                                          prefetch_buffer_size=4),
-                hooks=[time_hist], max_steps=5)
+                hooks=[time_hist], max_steps=100)
 
 
     total_time = sum(time_hist.times)
