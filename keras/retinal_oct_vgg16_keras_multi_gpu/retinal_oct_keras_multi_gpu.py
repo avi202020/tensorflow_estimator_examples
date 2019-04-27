@@ -62,7 +62,7 @@ test_folder = os.path.join('/home/josh/retinal_oct/OCT2017_final', 'test', '**',
 labels = ['CNV', 'DME', 'DRUSEN', 'NORMAL']
 
 NUM_GPUS = 2
-BATCH_SIZE = 256
+BATCH_SIZE = 64
 EPOCHS = 1
 training_image_count = 83484
 
@@ -240,10 +240,11 @@ def main(argv):
                                          labels,
                                          shuffle=True,
                                          batch_size=BATCH_SIZE,
-                                         buffer_size=2048,
+                                         #buffer_size=2048,
+                                         buffer_size=4096,
                                          num_epochs=EPOCHS,
                                          prefetch_buffer_size=4),
-                hooks=[time_hist])
+                hooks=[time_hist], max_steps=5)
 
 
     total_time = sum(time_hist.times)
