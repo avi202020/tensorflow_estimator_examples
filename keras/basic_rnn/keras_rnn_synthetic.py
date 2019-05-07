@@ -1,4 +1,6 @@
 """A Keras Example of a RNN for a synthetic dataset."""
+# based on the notebook: https://github.com/ageron/handson-ml2/blob/master/15_processing_sequences_using_rnns_and_cnns.ipynb
+
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -42,7 +44,9 @@ tf.random.set_random_seed(42)
 # https://stackoverflow.com/questions/53014306/error-15-initializing-libiomp5-dylib-but-found-libiomp5-dylib-already-initial
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
+EPOCHS = 2
 
+# generates some time series data to train our model on
 def generate_time_series(batch_size, n_steps):
     freq1, freq2, offsets1, offsets2 = np.random.rand(4, batch_size, 1)
     time = np.linspace(0, 1, n_steps)
@@ -137,7 +141,7 @@ def main(argv):
 
     rnn_model = define_rnn()
 
-    history = rnn_model.fit(X_train, y_train, epochs=5,
+    history = rnn_model.fit(X_train, y_train, epochs=EPOCHS,
                    validation_data=(X_valid, y_valid))
 
    
