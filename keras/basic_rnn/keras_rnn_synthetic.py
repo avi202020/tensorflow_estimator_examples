@@ -44,7 +44,7 @@ tf.random.set_random_seed(42)
 # https://stackoverflow.com/questions/53014306/error-15-initializing-libiomp5-dylib-but-found-libiomp5-dylib-already-initial
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
-EPOCHS = 2
+EPOCHS = 5
 
 # generates some time series data to train our model on
 def generate_time_series(batch_size, n_steps):
