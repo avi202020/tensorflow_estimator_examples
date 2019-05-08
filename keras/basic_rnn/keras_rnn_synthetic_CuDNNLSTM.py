@@ -109,7 +109,7 @@ def define_rnn():
 
     model = keras.models.Sequential([
         keras.layers.CuDNNLSTM(20, return_sequences=True, input_shape=[None, 1]),
-        keras.layers.CuDNNLSTM(40, return_sequences=True),
+        keras.layers.CuDNNLSTM(20, return_sequences=True),
         keras.layers.CuDNNLSTM(1)
     ])
 
