@@ -42,7 +42,7 @@ print('x_test shape:', x_test.shape)
 print('Build model...')
 model = Sequential()
 model.add(Embedding(max_features, 128))
-model.add(CuDNNLSTM(128, recurrent_dropout=0.2))
+model.add(CuDNNLSTM(128))
 model.add(Dense(1, activation='sigmoid'))
 
 # try using different optimizers and different optimizer configs
